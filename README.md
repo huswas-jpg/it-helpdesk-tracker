@@ -78,5 +78,5 @@ python3 -m http.server 8000
 
 ---
 
-*Built by Nain · Computer Information Systems major*
+*Built by Husnain · Computer Information Systems major*
 *Developed with AI assistance; all logic reviewed and understood line-by-line.*
