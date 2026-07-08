@@ -2,11 +2,11 @@
 
 A single-page enterprise IT operations tool that simulates a real helpdesk workflow: employees submit tickets, technicians triage them against live SLA timers, and every resolution automatically updates the company's hardware asset ledger.
 
-**Live demo:** [( https://huswas-jpg.github.io/it-helpdesk-tracker/)]
+**Live demo:** [https://huswas-jpg.github.io/it-helpdesk-tracker/](https://huswas-jpg.github.io/it-helpdesk-tracker/)
 
 Built as a portfolio project for my Computer Information Systems program to demonstrate front-end engineering, IT service management (ITSM) concepts, and data-driven UI design.
 
-![Tech](https://img.shields.io/badge/HTML5-informational) ![Tech](https://img.shields.io/badge/CSS3-informational) ![Tech](https://img.shields.io/badge/JavaScript%20(ES6+)-informational) ![Tech](https://img.shields.io/badge/Chart.js%204-informational)
+![HTML5](https://img.shields.io/badge/HTML5-informational) ![CSS3](https://img.shields.io/badge/CSS3-informational) ![JavaScript](https://img.shields.io/badge/JavaScript%20(ES6+)-informational) ![Chart.js](https://img.shields.io/badge/Chart.js%204-informational)
 
 ---
 
@@ -39,19 +39,23 @@ Built as a portfolio project for my Computer Information Systems program to demo
 3. Resolve ticket **TKT-1083** (MacBook battery) — then check the **Asset Ledger**: Marcus Reed's MacBook Pro flips from Degraded to Healthy.
 4. Toggle the theme and watch the charts restyle.
 
+## Project structure
+
+```
+it-helpdesk-tracker/
+├── index.html        # markup and page shell
+├── css/
+│   └── styles.css    # theme variables, layout, components, media queries
+└── js/
+    └── app.js        # state, business logic, rendering, and Chart.js setup
+```
+
 ## Architecture notes
 
-- **Single self-contained file** — all HTML, CSS, and JavaScript live in `index.html`. The only external dependencies are Chart.js (cdnjs) and Google Fonts.
+- **Separation of concerns** — markup (`index.html`), styling (`css/styles.css`), and behavior (`js/app.js`) are cleanly separated. The only external dependencies are Chart.js (via cdnjs) and Google Fonts.
 - **In-memory state** — this is a front-end simulation with no backend. All tickets, assets, and metrics live in JavaScript state and reset on refresh (by design, so the demo always starts from a clean, populated dataset).
-- **Render cycle** — a single `renderAll()` pass recomputes metrics and re-renders tickets, the ledger, and charts after every state mutation; SLA timers update on a 1-second interval without full re-renders.
-
-## What I'd add for production
-
-- REST API + PostgreSQL for persistent tickets and assets
-- Authentication with role-based access (employee vs. technician vs. admin)
-- WebSocket push so multiple technicians see queue changes in real time
-- Email/Slack notifications on escalation and SLA breach
-- Audit log and reporting exports
+- **Single source of truth** — two arrays (`tickets`, `assets`) drive everything. On any change the app mutates those arrays, then a single `renderAll()` pass recomputes metrics and re-paints the tickets, ledger, and charts. SLA timers update on a 1-second interval without a full re-render.
+- **Event delegation** — dynamically created ticket buttons are handled by one listener on the list container rather than per-button listeners, so behavior survives every re-render.
 
 ## Running locally
 
@@ -61,7 +65,18 @@ No build step. Clone the repo and open `index.html` in any modern browser, or se
 python3 -m http.server 8000
 ```
 
+> Note: because CSS and JS are in separate folders, open the project as a whole (keep `index.html`, `css/`, and `js/` together). Opening a copy of `index.html` on its own, without those folders beside it, will load it unstyled.
+
+## What I'd add for production
+
+- REST API + PostgreSQL for persistent tickets and assets
+- Authentication with role-based access (employee vs. technician vs. admin)
+- WebSocket push so multiple technicians see queue changes in real time
+- Email / Slack notifications on escalation and SLA breach
+- An audit log and reporting exports (CSV / PDF)
+- Automated tests for the escalation and SLA logic
+
 ---
 
-*Built by [Husnain Waseem] · CIS major · [ www.linkedin.com/in/husnain-waseem-4840a735a ]*
-*Developed with AI assistance (Anthropic's Claude); all logic reviewed and understood line-by-line.*
+*Built by Nain · Computer Information Systems major*
+*Developed with AI assistance; all logic reviewed and understood line-by-line.*
